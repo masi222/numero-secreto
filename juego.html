@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Número Secreto</title>
+    <style>
+        /* Fuente futurista de Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fondo animado con estrellas */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Container principal */
+        .game-container {
+            background: rgba(15, 15, 35, 0.9);
+            border: 2px solid #00ffff;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.3),
+                inset 0 0 30px rgba(0, 255, 255, 0.1);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1); }
+            to { box-shadow: 0 0 50px rgba(0, 255, 255, 0.5), inset 0 0 50px rgba(0, 255, 255, 0.2); }
+        }
+
+        /* Título */
+        .title {
+            color: #00ffff;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Input futurista */
+        .input-container {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 2rem;
+            font-family: 'Orbitron', monospace;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 10px;
+            color: #00ffff;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Botones futuristas */
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            border: 2px solid;
+            border-radius: 25px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 107, 107, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Mensajes */
+        .message {
+            min-height: 60px;
+            margin: 2rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-info {
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .message-success {
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            animation: victory 0.6s ease;
+        }
+
+        .message-higher {
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .message-lower {
+            color: #9b59b6;
+            border: 1px solid #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+
+        @keyframes victory {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Estadísticas */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Efectos de partículas para victoria */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 3s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo de estrellas -->
+    <div class="stars" id="stars"></div>
+
+    <div class="game-container">
+        <h1 class="title">🎲 NÚMERO SECRETO</h1>
+        <p class="subtitle">¡Adivina el número que estoy pensando!</p>
+        
+        <div class="input-container">
+            <input 
+                type="number" 
+                id="numberInput" 
+                class="number-input" 
+                placeholder="?"
+                min="1" 
+                max="10"
+            >
+        </div>
+
+        <div class="buttons">
+            <button id="guessBtn" class="btn btn-primary">🔍 Intentar</button>
+            <button id="newGameBtn" class="btn btn-secondary">🔄 Nuevo Juego</button>
+        </div>
+
+        <div id="message" class="message">
+            ¡Comienza a adivinar! Ingresa un número del 1 al 10
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span id="attempts" class="stat-number">0</span>
+                <span class="stat-label">Intentos</span>
+            </div>
+            <div class="stat-card">
+                <span id="bestScore" class="stat-number">-</span>
+                <span class="stat-label">Mejor Puntuación</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables principales
+        let secretNumber = 0;
+        let attempts = 0;
+        let gameOver = false;
+        let bestScore = null;
+
+        // Elementos del DOM
+        const numberInput = document.getElementById('numberInput');
+        const guessBtn = document.getElementById('guessBtn');
+        const newGameBtn = document.getElementById('newGameBtn');
+        const message = document.getElementById('message');
+        const attemptsDisplay = document.getElementById('attempts');
+        const bestScoreDisplay = document.getElementById('bestScore');
+
+        // Crear estrellas de fondo
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Mostrar mensaje
+        function showMessage(text, type) {
+            message.className = `message message-${type}`;
+            message.textContent = text;
+            setTimeout(() => {
+                message.classList.add('show');
+            }, 100);
+        }
+
+        // Iniciar nuevo juego
+        function startNewGame() {
+            secretNumber = Math.floor(Math.random() * 10) + 1;
+            attempts = 0;
+            gameOver = false;
+            
+            attemptsDisplay.textContent = '0';
+            numberInput.value = '';
+            numberInput.focus();
+            
+            message.classList.remove('show');
+            setTimeout(() => {
+                showMessage('¡Comienza a adivinar! Ingresa un número del 1 al 10', 'info');
+            }, 300);
+            
+            // Para testing - eliminar en producción
+            console.log('Número secreto:', secretNumber);
+        }
+
+        // Hacer intento
+        function makeGuess() {
+            if (gameOver) return;
+
+            const guess = parseInt(numberInput.value);
+            
+            // Validar entrada
+            if (isNaN(guess) || guess < 1 || guess > 10) {
+                alert('¡Por favor ingresa un número válido del 1 al 10!');
+                numberInput.focus();
+                return;
+            }
+
+            attempts++;
+            attemptsDisplay.textContent = attempts;
+            numberInput.value = '';
+
+            if (guess === secretNumber) {
+                // Victoria!
+                gameOver = true;
+                const attemptText = attempts === 1 ? 'intento' : 'intentos';
+                showMessage(`🎉 ¡FELICITACIONES! Adivinaste el número ${secretNumber} en ${attempts} ${attemptText}! 🎉`, 'success');
+                
+                // Actualizar mejor puntaje
+                if (bestScore === null || attempts < bestScore) {
+                    bestScore = attempts;
+                    bestScoreDisplay.textContent = bestScore;
+                }
+                
+                createParticles();
+                setTimeout(() => newGameBtn.focus(), 500);
+                
+            } else if (guess < secretNumber) {
+                showMessage(`¡El número secreto es MAYOR que ${guess}! 🔥`, 'higher');
+            } else {
+                showMessage(`¡El número secreto es MENOR que ${guess}! ❄️`, 'lower');
+            }
+
+            numberInput.focus();
+        }
+
+        // Crear efecto de partículas
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Event listeners
+        guessBtn.addEventListener('click', makeGuess);
+        newGameBtn.addEventListener('click', startNewGame);
+
+        numberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                makeGuess();
+            }
+        });
+
+        // Inicializar juego
+        createStars();
+        startNewGame();
+        showMessage('¡Comienza a adivinar! Ingresa un número del 1 al 10', 'info');
+    </script>
+</body>
+</html>
