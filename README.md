@@ -5,7 +5,7 @@ Juego web interactivo donde el usuario debe adivinar un número aleatorio entre 
 
 ## 🔗 Enlaces
 
-- **🎮 Despliegue**: [https://numero-secreto-flax-zeta.vercel.app](Link de Vercel)
+- **🎮 Despliegue**: [https://numero-secreto-flax-zeta.vercel.app] (Link de Vercel)
   
 ## Características
 - **Interfaz futurista** con efectos de neón y animaciones
