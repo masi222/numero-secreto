@@ -225,6 +225,12 @@
             border: 1px solid #9b59b6;
             background: rgba(155, 89, 182, 0.1);
         }
+        .message-lost {
+            color: #ca3e63;
+            border: 1px solid #ca3e63;
+            background:  rgba(255, 107, 107, 0.1);
+        }
+
 
         @keyframes victory {
             0%, 100% { transform: scale(1); }
@@ -349,7 +355,8 @@
     <script>
         // Variables principales
         let secretNumber = 0;
-        let attempts = 0;
+        let attempts = 4;
+        let numberAttempts = 0;
         let gameOver = false;
         let bestScore = null;
 
@@ -386,10 +393,13 @@
         // Iniciar nuevo juego
         function startNewGame() {
             secretNumber = Math.floor(Math.random() * 10) + 1;
-            attempts = 0;
+            console.log(secretNumber)
+            attempts = 4;
             gameOver = false;
+            numberAttempts = 0;
+
             
-            attemptsDisplay.textContent = '0';
+            attemptsDisplay.textContent = '4';
             numberInput.value = '';
             numberInput.focus();
             
@@ -398,8 +408,6 @@
                 showMessage('¡Comienza a adivinar! Ingresa un número del 1 al 10', 'info');
             }, 300);
             
-            // Para testing - eliminar en producción
-            console.log('Número secreto:', secretNumber);
         }
 
         // Hacer intento
@@ -415,26 +423,30 @@
                 return;
             }
 
-            attempts++;
+            attempts--;
+            numberAttempts ++;
             attemptsDisplay.textContent = attempts;
             numberInput.value = '';
 
             if (guess === secretNumber) {
                 // Victoria!
                 gameOver = true;
-                const attemptText = attempts === 1 ? 'intento' : 'intentos';
-                showMessage(`🎉 ¡FELICITACIONES! Adivinaste el número ${secretNumber} en ${attempts} ${attemptText}! 🎉`, 'success');
+                const attemptText = numberAttempts === 1 ? 'intento' : 'intentos';
+                showMessage(`🎉 ¡FELICITACIONES! Adivinaste el número ${secretNumber} en ${numberAttempts} ${attemptText}! 🎉`, 'success');
                 
                 // Actualizar mejor puntaje
-                if (bestScore === null || attempts < bestScore) {
-                    bestScore = attempts;
+                if (bestScore === null || numberAttempts < bestScore) {
+                    bestScore = numberAttempts;
                     bestScoreDisplay.textContent = bestScore;
                 }
                 
                 createParticles();
                 setTimeout(() => newGameBtn.focus(), 500);
                 
-            } else if (guess < secretNumber) {
+            } else if (attempts === 0){
+                gameOver = true;
+                showMessage(`¡Perdiste! el número secreto era ${secretNumber}`, 'lost');
+            }else if (guess < secretNumber) {
                 showMessage(`¡El número secreto es MAYOR que ${guess}! 🔥`, 'higher');
             } else {
                 showMessage(`¡El número secreto es MENOR que ${guess}! ❄️`, 'lower');
